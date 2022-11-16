@@ -135,8 +135,43 @@ def lstm_cell_forward_test(target):
     
     
     
-    def lstm_forward_test(target):
-        pass
+def lstm_forward_test(target):
+    np.random.seed(45)
+    n_x = 4
+    m = 13
+    T_x = 16
+    n_a = 3
+    n_y = 2
+    x_tmp = np.random.randn(n_x, m, T_x)
+    a0_tmp = np.random.randn(n_a, m)
+    parameters_tmp = {}
+    parameters_tmp['Wf'] = np.random.randn(n_a, n_a + n_x)
+    parameters_tmp['bf'] = np.random.randn(n_a, 1)
+    parameters_tmp['Wi'] = np.random.randn(n_a, n_a + n_x)
+    parameters_tmp['bi'] = np.random.randn(n_a, 1)
+    parameters_tmp['Wo'] = np.random.randn(n_a, n_a + n_x)
+    parameters_tmp['bo'] = np.random.randn(n_a, 1)
+    parameters_tmp['Wc'] = np.random.randn(n_a, n_a + n_x)
+    parameters_tmp['bc'] = np.random.randn(n_a, 1)
+    parameters_tmp['Wy'] = np.random.randn(n_a, n_a + n_x)
+    parameters_tmp['by'] = np.random.randn(n_a, 1)
+    
+    
+    a, y, c, caches = target(x_tmp, a0_tmp, parameters_tmp)
+    
+    assert a.shape == (n_a, m, T_x), f"Wrong shape for a. {a.shape} != {(n_a, m, T_x)}"
+    assert c.shape == (n_a, m, T_x), f"Wrong shape for c. {c.shape} != {(n_a, m, T_x)}"
+    assert y.shape == (n_y, m, T_x), f"Wrong shape for y. {y.shape} != {(n_y, m, T_x)}"
+    assert len(caches[0]) == T_x, f"Wrong shape for caches. {len(caches[0])} != {T_x} "
+    assert len(caches[0][0]) == 10, f"length of caches[0][0] must be 10."
+    
+    assert np.allclose(a[2, 1, 4:6], [-0.01606022,  0.0243569]), "Wrong values for a"
+    assert np.allclose(c[2, 1, 4:6], [-0.02753855,  0.05668358]), "Wrong values for c"
+    assert np.allclose(y[1, 1, 4:6], [0.70444592 ,0.70648935]), "Wrong values for y"
+    
+    print("\033[92mAll tests passed")
+        
+        
     
     
     
