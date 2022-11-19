@@ -153,8 +153,8 @@ def lstm_forward_test(target):
     parameters_tmp['bo'] = np.random.randn(n_a, 1)
     parameters_tmp['Wc'] = np.random.randn(n_a, n_a + n_x)
     parameters_tmp['bc'] = np.random.randn(n_a, 1)
-    parameters_tmp['Wy'] = np.random.randn(n_a, n_a + n_x)
-    parameters_tmp['by'] = np.random.randn(n_a, 1)
+    parameters_tmp['Wy'] = np.random.randn(n_y, n_a)
+    parameters_tmp['by'] = np.random.randn(n_y, 1)
     
     
     a, y, c, caches = target(x_tmp, a0_tmp, parameters_tmp)
