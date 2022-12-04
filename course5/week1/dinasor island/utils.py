@@ -45,7 +45,34 @@ def rnn_forward(X, Y, a0, parameters, vocab_size=27):
     
     for t in range(len(X)):
         x[t] = np.zeros((vocab_size, 1))
+        if (X[t] != None):
+            x[t][X[t]] = 1
+        
+        a[t], y_hat[t] = rnn_step_forward(parameters, a[t-1], x[t])
+        
+        loss -= np.log(y_hat[t][Y[t],0])
+        
+    cache = (y_hat, a, x)
+        
+    return loss, cache
+
+def rnn_backward(X, Y, parameters, cache):
+    gradients = {}
     
+    (y_hat, a, x) = cache
+    Waa, Wax, Wya, by, b = parameters['Waa'], parameters['Wax'], parameters['Wya'], parameters['by'], parameters['b']
+    
+    gradients['dWax'], gradients['dWaa'], gradients['dWya'] = np.zeros_like(Wax), np.zeros_like(Waa), np.zeros_like(Wya)
+    gradients['db'], gradients['dby'] = np.zeros_like(b), np.zeros_like(by)
+    gradients['da_next'] = np.zeros_like(a[0])
+    
+
+    for t in reversed(range(len(X))):
+        dy = np.copy(y_hat[t])
+        dy[Y[t]] -= 1
+        gradients = rnn_step_backward(dy, gradients, parameters, x[t], a[t], a[t-1])
+    
+    return gradients, a
     
     
     
