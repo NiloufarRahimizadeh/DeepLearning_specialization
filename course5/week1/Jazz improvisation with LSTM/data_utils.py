@@ -7,6 +7,7 @@ from mido import MidiFile
 from pydub import AudioSegment
 from pydub.generators import Sine
 import math
+import numpy as np
 
 n_a = 64
 x_initializer = np.zeros((1, 1, 90))
